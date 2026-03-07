@@ -1,0 +1,35 @@
+{
+  "pre_seed": {
+    "market_attractiveness": 20,
+    "founder_team": 20,
+    "product_differentiation": 15,
+    "traction_validation": 10,
+    "business_model_economics": 10,
+    "financing_syndicate_quality": 10,
+    "deal_terms_entry_price": 5,
+    "risk_execution_complexity": 5,
+    "follow_on_potential_venture_fit": 5
+  },
+  "seed": {
+    "market_attractiveness": 18,
+    "founder_team": 16,
+    "product_differentiation": 14,
+    "traction_validation": 16,
+    "business_model_economics": 10,
+    "financing_syndicate_quality": 10,
+    "deal_terms_entry_price": 6,
+    "risk_execution_complexity": 5,
+    "follow_on_potential_venture_fit": 5
+  },
+  "series_a": {
+    "market_attractiveness": 16,
+    "founder_team": 12,
+    "product_differentiation": 12,
+    "traction_validation": 22,
+    "business_model_economics": 14,
+    "financing_syndicate_quality": 8,
+    "deal_terms_entry_price": 6,
+    "risk_execution_complexity": 5,
+    "follow_on_potential_venture_fit": 5
+  }
+}

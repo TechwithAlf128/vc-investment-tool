@@ -1,0 +1,19 @@
+{
+  "required_review_fields": ["company_name", "stage", "hq_location", "sector"],
+  "confidence_thresholds": {
+    "high": 0.8,
+    "medium": 0.5,
+    "low": 0.0
+  },
+  "numeric_patterns": {
+    "usd_millions": "\\$([0-9,.]+)\\s*[Mm](?:illion)?",
+    "usd_thousands": "\\$([0-9,.]+)\\s*[Kk](?:000)?",
+    "percent": "([0-9.]+)\\s*%",
+    "plain_number": "([0-9,]+)"
+  },
+  "stage_keywords": {
+    "pre_seed": ["pre-seed", "pre seed", "preseed", "idea stage", "concept stage"],
+    "seed": ["seed", "seed round", "seed stage"],
+    "series_a": ["series a", "series-a", "seriesa"]
+  }
+}

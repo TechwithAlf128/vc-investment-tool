@@ -1,0 +1,22 @@
+{
+  "hard_fail_triggers": [
+    { "field": "sector", "pattern": "crypto|cryptocurrency|blockchain|web3|nft", "flag": "crypto", "severity": 4 },
+    { "field": "sector", "pattern": "gambling|casino|betting|lottery", "flag": "gambling", "severity": 4 },
+    { "field": "hq_location", "pattern": "china|beijing|shanghai|shenzhen", "flag": "non_us_primary", "severity": 4 },
+    { "field": "china_exposure", "pattern": "material|significant|primary|majority", "flag": "china_exposure", "severity": 4 },
+    { "field": "litigation_issues", "pattern": "material|criminal|fraud|sec|felony", "flag": "legal_compliance", "severity": 4 }
+  ],
+  "escalate_triggers": [
+    { "field": "founder_integrity_concerns", "pattern": "concern|issue|question|investigate", "flag": "founder_integrity", "severity": 3 },
+    { "field": "governance_notes", "pattern": "concern|dysfunction|dispute|control", "flag": "cap_table", "severity": 3 },
+    { "field": "regulatory_risk", "pattern": "unclear|uncertain|pending|investigation", "flag": "legal_compliance", "severity": 2 },
+    { "field": "china_exposure", "pattern": "some|minor|partial|indirect", "flag": "china_exposure", "severity": 2 }
+  ],
+  "severity_labels": {
+    "0": "None",
+    "1": "Minor",
+    "2": "Material",
+    "3": "Serious",
+    "4": "Deal Breaker"
+  }
+}

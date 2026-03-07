@@ -1,0 +1,41 @@
+{
+  "thresholds": {
+    "invest_high_priority": { "min": 85, "max": 100 },
+    "invest": { "min": 75, "max": 84 },
+    "invest_small": { "min": 65, "max": 74 },
+    "watch": { "min": 50, "max": 64 },
+    "pass": { "min": 0, "max": 49 }
+  },
+  "overrides": [
+    {
+      "condition": "red_flag_severity_4",
+      "effect": "force_pass_or_escalate",
+      "description": "Any severity 4 red flag forces Pass or Escalate"
+    },
+    {
+      "condition": "two_or_more_severity_3_red_flags",
+      "effect": "cap_at_watch",
+      "description": "Two or more severity 3 red flags cap recommendation at Watch"
+    },
+    {
+      "condition": "founder_integrity_severity_3_plus",
+      "effect": "require_manual_review",
+      "description": "Founder integrity red flag severity 3+ requires manual review"
+    },
+    {
+      "condition": "high_upside_weak_proof",
+      "effect": "cap_at_invest_small",
+      "description": "Very high upside plus weak proof can be at most Invest Small"
+    },
+    {
+      "condition": "stretched_valuation",
+      "effect": "downgrade_one_level",
+      "description": "Excessively stretched valuation downgrades recommendation one level"
+    },
+    {
+      "condition": "high_execution_risk",
+      "effect": "downgrade_one_level",
+      "description": "High execution risk downgrades recommendation one level"
+    }
+  ]
+}
