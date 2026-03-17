@@ -101,7 +101,7 @@ export default function UploadPage() {
     try {
       const arrayBuffer = await file.arrayBuffer();
       const pdfjsLib = await import('pdfjs-dist');
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
 
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
       let fullText = '';
@@ -121,8 +121,9 @@ export default function UploadPage() {
       saveEvaluation(ev);
       router.push(`/results?id=${ev.id}`);
     } catch (err) {
-      setError('Failed to parse PDF. Please try again.');
-      console.error(err);
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(`Failed to parse PDF: ${msg}`);
+      console.error('PDF parse error:', err);
     } finally {
       setLoading(false);
     }
