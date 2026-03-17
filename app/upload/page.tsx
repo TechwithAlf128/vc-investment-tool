@@ -137,6 +137,55 @@ export default function UploadPage() {
       ev.raw_extracted = extracted;
       ev.analyst_reviewed = { ...extracted };
       ev.pdf_filename = file.name;
+
+      // AI scoring
+      try {
+        const scoreRes = await fetch('/api/score', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ extracted, text: fullText }),
+        });
+        const scoreData = await scoreRes.json();
+        if (scoreRes.ok && scoreData.scores) {
+          // Store AI scores and reasoning in the evaluation
+          const evAny = ev as unknown as Record<string, unknown>;
+          evAny.ai_scores = scoreData.scores;
+          evAny.ai_summary = scoreData.summary;
+          evAny.ai_strengths = scoreData.key_strengths;
+          evAny.ai_concerns = scoreData.key_concerns;
+
+          // Pre-populate category scores from AI
+          const { calculateCategoryScores, calculateDerivedScores } = await import('@/lib/scoring');
+          const { detectRedFlags } = await import('@/lib/redFlags');
+          const { getRecommendation } = await import('@/lib/recommendation');
+          const { generateMemo } = await import('@/lib/memoGenerator');
+          const { runHardScreen } = await import('@/lib/hardScreen');
+
+          const categories = [
+            'market_attractiveness','founder_team','product_differentiation',
+            'traction_validation','business_model_economics','financing_syndicate_quality',
+            'deal_terms_entry_price','risk_execution_complexity','follow_on_potential_venture_fit'
+          ] as const;
+
+          const inputs = Object.fromEntries(
+            categories.map(cat => [cat, {
+              raw_score: scoreData.scores[cat]?.score ?? 3,
+              notes: scoreData.scores[cat]?.reasoning ?? ''
+            }])
+          ) as Record<typeof categories[number], { raw_score: number; notes: string }>;
+
+          ev.hard_screen = runHardScreen(ev.analyst_reviewed);
+          ev.red_flags = detectRedFlags(ev.analyst_reviewed);
+          ev.category_scores = calculateCategoryScores(inputs, ev.stage);
+          ev.derived_scores = calculateDerivedScores(ev.category_scores);
+          const { recommendation } = getRecommendation(ev.derived_scores, ev.red_flags);
+          ev.recommendation = recommendation;
+          ev.memo = generateMemo(ev);
+        }
+      } catch (scoreErr) {
+        console.warn('AI scoring failed, continuing without scores:', scoreErr);
+      }
+
       saveEvaluation(ev);
       router.push(`/results?id=${ev.id}`);
     } catch (err) {
@@ -188,7 +237,7 @@ export default function UploadPage() {
 
           <button onClick={process} disabled={!file || loading}
             className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 text-white font-semibold py-3 rounded-lg">
-            {loading ? 'Extracting...' : 'Extract & Review'}
+            {loading ? 'Extracting & Scoring with AI...' : 'Extract & Score with AI'}
           </button>
         </div>
       </div>
