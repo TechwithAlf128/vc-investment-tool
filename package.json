@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "prebuild": "node -e \"const fs=require('fs');const path=require('path');const src=path.join(path.dirname(require.resolve('pdfjs-dist/package.json')),'build','pdf.worker.min.mjs');fs.copyFileSync(src,'public/pdf.worker.min.mjs');console.log('Copied pdf.js worker to public/');\"",
+    "dev": "node -e \"const fs=require('fs');const path=require('path');const src=path.join(path.dirname(require.resolve('pdfjs-dist/package.json')),'build','pdf.worker.min.mjs');fs.copyFileSync(src,'public/pdf.worker.min.mjs');\" && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
@@ -21,7 +22,6 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "copy-webpack-plugin": "^14.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "tailwindcss": "^4",
