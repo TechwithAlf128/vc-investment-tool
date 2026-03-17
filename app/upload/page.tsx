@@ -112,7 +112,26 @@ export default function UploadPage() {
         fullText += `\n--- Page ${i} ---\n${pageText}`;
       }
 
-      const extracted = parseExtractedText(fullText);
+      // Use AI extraction API
+      const apiRes = await fetch('/api/extract', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: fullText, filename: file.name }),
+      });
+      const apiData = await apiRes.json();
+      if (!apiRes.ok || apiData.error) {
+        // Fall back to regex extraction if API fails
+        const extracted = parseExtractedText(fullText);
+        const companyName = (extracted.company_name?.value as string) || file.name.replace('.pdf', '');
+        const ev = createNewEvaluation(companyName, 'pdf');
+        ev.raw_extracted = extracted;
+        ev.analyst_reviewed = { ...extracted };
+        ev.pdf_filename = file.name;
+        saveEvaluation(ev);
+        router.push(`/results?id=${ev.id}`);
+        return;
+      }
+      const extracted = apiData.extracted;
       const companyName = (extracted.company_name?.value as string) || file.name.replace('.pdf', '');
       const ev = createNewEvaluation(companyName, 'pdf');
       ev.raw_extracted = extracted;
