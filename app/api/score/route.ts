@@ -19,46 +19,54 @@ export async function POST(req: NextRequest) {
 
 Based on the extracted deal data and document text below, score each category from 1-5 and provide brief reasoning.
 
+IMPORTANT SCORING RULES:
+- Do NOT default to 3. Every score must be justified with specific evidence from the document.
+- Use the full 1-5 range. Most deals should have a mix of highs (4-5) and lows (1-2), not all 3s.
+- For pre-revenue or early-stage companies: score Traction on engagement metrics, user trust signals, qualitative PMF indicators, pilot customers, and word-of-mouth — not just revenue numbers.
+- For Financing/Syndicate: named tier-1 investors, recognizable angels, or institutional leads should score 4-5.
+- For Team: prior exits, domain expertise, prestigious backgrounds, or relevant operator experience should score 4-5.
+- If something is genuinely unknown or not mentioned, score it 2 (not 3 — unknown = risk).
+
 Scoring guide:
 1 = Very poor / major red flag
-2 = Below average / significant concerns  
-3 = Average / neutral
-4 = Strong / above average
-5 = Exceptional / top decile
+2 = Below average / significant concerns or insufficient information
+3 = Average / neutral / mixed signals
+4 = Strong / above average / clear evidence of quality
+5 = Exceptional / top decile / best-in-class
 
 Categories to score:
 1. market_attractiveness: TAM size, market timing, sector tailwinds
 2. founder_team: Experience, domain expertise, execution ability, team completeness
 3. product_differentiation: Unique value prop, defensibility, IP/moat
-4. traction_validation: Revenue, growth rate, customers, product-market fit signals
+4. traction_validation: Revenue, growth rate, customers, product-market fit signals (for early stage: weight engagement, referrals, behavioral signals heavily)
 5. business_model_economics: Unit economics, gross margins, scalability, path to profitability
 6. financing_syndicate_quality: Lead investor quality, co-investors, valuation discipline
 7. deal_terms_entry_price: Valuation vs traction, round size appropriateness
-8. risk_execution_complexity: Key risks, regulatory, technical, market risks
+8. risk_execution_complexity: Key risks, regulatory, technical, market risks (1 = high risk, 5 = low risk)
 9. follow_on_potential_venture_fit: Potential for follow-on rounds, exit opportunities, fund fit
 
 Extracted data:
 ${fields}
 
 Document excerpt:
-${(text || '').slice(0, 6000)}
+${(text || '').slice(0, 20000)}
 
-Return ONLY valid JSON:
+Return ONLY valid JSON in this format (no markdown, no explanation outside the JSON):
 {
   "scores": {
-    "market_attractiveness": {"score": 4, "reasoning": "..."},
-    "founder_team": {"score": 3, "reasoning": "..."},
-    "product_differentiation": {"score": 4, "reasoning": "..."},
-    "traction_validation": {"score": 3, "reasoning": "..."},
-    "business_model_economics": {"score": 3, "reasoning": "..."},
-    "financing_syndicate_quality": {"score": 3, "reasoning": "..."},
-    "deal_terms_entry_price": {"score": 3, "reasoning": "..."},
-    "risk_execution_complexity": {"score": 3, "reasoning": "..."},
-    "follow_on_potential_venture_fit": {"score": 3, "reasoning": "..."}
+    "market_attractiveness": {"score": 4, "reasoning": "Specific evidence from the deck..."},
+    "founder_team": {"score": 4, "reasoning": "Specific evidence from the deck..."},
+    "product_differentiation": {"score": 4, "reasoning": "Specific evidence from the deck..."},
+    "traction_validation": {"score": 3, "reasoning": "Specific evidence from the deck..."},
+    "business_model_economics": {"score": 3, "reasoning": "Specific evidence from the deck..."},
+    "financing_syndicate_quality": {"score": 4, "reasoning": "Specific evidence from the deck..."},
+    "deal_terms_entry_price": {"score": 3, "reasoning": "Specific evidence from the deck..."},
+    "risk_execution_complexity": {"score": 2, "reasoning": "Specific evidence from the deck..."},
+    "follow_on_potential_venture_fit": {"score": 4, "reasoning": "Specific evidence from the deck..."}
   },
-  "summary": "2-3 sentence overall assessment",
-  "key_strengths": ["strength 1", "strength 2", "strength 3"],
-  "key_concerns": ["concern 1", "concern 2", "concern 3"]
+  "summary": "2-3 sentence overall assessment grounded in the actual deal details",
+  "key_strengths": ["Specific strength with evidence", "Specific strength with evidence", "Specific strength with evidence"],
+  "key_concerns": ["Specific concern with evidence", "Specific concern with evidence", "Specific concern with evidence"]
 }`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
