@@ -33,6 +33,7 @@ Fields to extract:
 - product_description: What the product/service does (1-2 sentences)
 - revenue_model: How the company makes money
 - key_metrics: Any other notable KPIs or metrics mentioned
+- notable_investors: Names of any notable investors, angels, or institutions already in the deal
 
 Return ONLY valid JSON in this exact format:
 {
@@ -51,7 +52,7 @@ ${text.slice(0, 12000)}`;
         'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4o',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.1,
         response_format: { type: 'json_object' },
